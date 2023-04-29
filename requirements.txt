@@ -4,3 +4,4 @@ pandas
 torch
 flask_cors
 transformers
+python-dotenv
