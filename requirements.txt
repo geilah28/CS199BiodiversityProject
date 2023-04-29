@@ -1,0 +1,6 @@
+elasticsearch==7.9.1
+Flask
+pandas
+torch
+flask_cors
+transformers
