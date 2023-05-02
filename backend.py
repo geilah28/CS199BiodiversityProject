@@ -141,6 +141,7 @@ model = AutoModelForSequenceClassification.from_pretrained(RE_checkpoint)
 model.to(device)
 tokenizer = AutoTokenizer.from_pretrained("roberta-large") 
 
+#Predict the Question and Get the Answer
 def predict(question, passage):
     sequence = tokenizer.encode_plus(question, passage, return_tensors="pt", truncation='longest_first')['input_ids'].to(device)
     
@@ -150,11 +151,9 @@ def predict(question, passage):
     proba_no = round(probabilities[0], 2)
 
     if proba_yes>proba_no:
-       return "Yes"
-    elif proba_yes<proba_no:
-       return "No"
-    else:
-       return "Neither"
+       return "There exists a relation between the two entities"
+    elif proba_yes<=proba_no:
+       return "From our documents, the relation is inconclusive"
 
 @app.route("/re", methods=["GET"])
 def re_route():
@@ -175,7 +174,7 @@ def re_route():
     if len(questions)<1:
         return "The input pair does not show a relation between each other"
     else:
-        return  predict(questions[0], doc)
+        return jsonify(question= questions[0], answer= predict(questions[0], doc))
 
 if __name__ == "__main__":
   app.run(debug=True)
