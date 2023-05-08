@@ -39,7 +39,28 @@ def insert_passages(): #Insert passages
   
   return df
 
-dataframe= insert_passages()
+def insert_passages_sample(): #Insert passages
+  folder_path = 'sample-data'
+
+  passages = []
+  title = ["Poisonous snakes of the world : a manual for use by the U. S. amphibious forces", 
+           "Species of the Guentheri group of Platymantis (Amphibia: Ranidae) from the Philippines, with descriptions of four new species",
+           "A General History of Birds, Volume 3",
+           "The conservation status of biological resources in the Philippines",
+           "The Philippine journal of science, Vol VI"]
+  
+  for filename in sorted(glob.glob(os.path.join(folder_path, '*.txt'))):
+    with open(filename, 'r', encoding="utf-8") as f:
+      data = f.read().replace('\n', ' ')
+      passages.append(data.lower())
+
+  data= {'passage': passages, 'title': title}
+  df=pd.DataFrame(data=data)
+  
+  return df
+
+dataframe= insert_passages_sample()
+print(dataframe.head())
 es = elasticsearch.Elasticsearch(hosts=["http://localhost:9200"])
 
 Settings = {
@@ -50,6 +71,9 @@ Settings = {
     "mappings":{
         "properties":{
             "passage":{
+                "type":"text"
+            },
+            "title":{
                 "type":"text"
             }
         }
@@ -74,15 +98,14 @@ def json_formatter(dataset, index_name, index_type='_doc'):
     except Exception as e:
         print("There is a problem: {}".format(e))
 
-MY_INDEX = es.indices.create(index="content", ignore=[400,404], body=Settings)
-json_Formatted_dataset = json_formatter(dataset=dataframe, index_name='content', index_type='_doc')
+MY_INDEX = es.indices.create(index="sample", ignore=[400,404], body=Settings)
+json_Formatted_dataset = json_formatter(dataset=dataframe, index_name='sample', index_type='_doc')
 
 try:
     res = helpers.bulk(es, json_Formatted_dataset)
     print("successfully imported to elasticsearch.")
 except Exception as e:
     print(f"error: {e}")
-
 
 #Setup NER
 NER_checkpoint = "./ner_model"
