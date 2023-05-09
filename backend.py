@@ -160,9 +160,10 @@ def question_answer(entity_group, entities):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 RE_checkpoint = "./qa_model"
-model = AutoModelForSequenceClassification.from_pretrained(RE_checkpoint)
+new_model = "hz53/roberta-base-boolq"
+model = AutoModelForSequenceClassification.from_pretrained(new_model)
 model.to(device)
-tokenizer = AutoTokenizer.from_pretrained("roberta-large") 
+tokenizer = AutoTokenizer.from_pretrained("roberta-base") 
 
 #Predict the Question and Get the Answer
 def predict(question, passage):
@@ -173,9 +174,9 @@ def predict(question, passage):
     proba_yes = round(probabilities[1], 2)
     proba_no = round(probabilities[0], 2)
 
-    if proba_yes>proba_no:
+    if proba_yes>=0.86:
        return "There exists a relation between the two entities"
-    elif proba_yes<=proba_no:
+    else:
        return "From our documents, the relation is inconclusive"
 
 @app.route("/re", methods=["GET"])
