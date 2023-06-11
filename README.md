@@ -114,7 +114,7 @@ npm install
 ```
 
 ### Adding the NER Model and QA Model
-Go to Google Drive Link [Google Drive](https://drive.google.com/drive/u/3/folders/1RbQDpZRxI46te9nISYXoQ_WIOc_UvH5S)
+Go to Google Drive Link [Google Drive](https://drive.google.com/drive/folders/16g09ztf4K6AjZUADcxI0hTFzXS8uo2J8?usp=sharing)
 
 Download qa_model and ner_model (this will be a zipped file)
 
