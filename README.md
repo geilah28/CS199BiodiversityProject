@@ -1,4 +1,4 @@
-# PHILBIOAsk (Temporary)
+# CS 199 Special Project
 
 A semantic search engine for the Philippine Biodiversity using Named Entity Recognition and Relation Extraction
 

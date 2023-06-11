@@ -139,7 +139,7 @@ def ner_route():
     return entities
 
 #Set up QA or RE
-def question_answer(entity_group, entities):
+def question_answer(entity_group, entities): #Get the question out of the pair of entities
     questions=[]
    
     for x in range(len(entity_group)):
@@ -160,7 +160,6 @@ def question_answer(entity_group, entities):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 RE_checkpoint = "./qa_model"
-new_model = "hz53/roberta-base-boolq"
 model = AutoModelForSequenceClassification.from_pretrained(RE_checkpoint)
 model.to(device)
 tokenizer = AutoTokenizer.from_pretrained("roberta-large") 
@@ -179,6 +178,7 @@ def predict(question, passage):
     else:
        return "From our documents, the relation is inconclusive"
 
+#Relation Extraction route
 @app.route("/re", methods=["GET"])
 def re_route():
     entitygroup=[]
